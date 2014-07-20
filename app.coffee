@@ -10,13 +10,7 @@ app.get '/js/*',(req,res)->
 app.get '/css/*',(req,res)->
 	res.sendfile __dirname+req.path
 
-run=(socket)->
-	speed={}
-	speed[0]=Math.random()*100
-	speed[1]=Math.random()*100
-	speed[2]=Math.random()*100
-	data={'speed':speed}
-	socket.send JSON.stringify(data)
+run=(require './getStream').update
 
 io.sockets.on 'connection', (socket)->
 	console.log "Connected"

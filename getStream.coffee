@@ -13,6 +13,7 @@ cb = (res)->
 	res.on 'end', (chunk)->
 		proc str
 cluster={}
+speed={}
 class port
 	constructor : (@name)->
 		@speed=0
@@ -34,8 +35,11 @@ class machine
 			else
 				@ports[name].update(aport)
 		@speed=0
+		i=0
 		for port of @ports
 			@speed +=@ports[port].speed
+			speed[i]=@ports[port].speed
+			i++
 		console.log @speed
 
 proc =(str)->
@@ -51,3 +55,8 @@ run= ->
 	a.end()
 
 setInterval run,1000
+update= (socket)->
+	data={'speed':speed}
+	socket.send JSON.stringify(data)
+
+exports.update=update

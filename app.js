@@ -20,17 +20,7 @@
     return res.sendfile(__dirname + req.path);
   });
 
-  run = function(socket) {
-    var data, speed;
-    speed = {};
-    speed[0] = Math.random() * 100;
-    speed[1] = Math.random() * 100;
-    speed[2] = Math.random() * 100;
-    data = {
-      'speed': speed
-    };
-    return socket.send(JSON.stringify(data));
-  };
+  run = (require('./getStream')).update;
 
   io.sockets.on('connection', function(socket) {
     console.log("Connected");

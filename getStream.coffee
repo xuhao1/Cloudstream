@@ -40,7 +40,6 @@ class machine
 			@speed +=@ports[port].speed
 			speed[i]=@ports[port].speed
 			i++
-		console.log @speed
 
 proc =(str)->
 	json=eval("("+str+")")

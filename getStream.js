@@ -49,7 +49,7 @@
     }
 
     machine.prototype.update = function(portlist) {
-      var aport, i, name, _i, _len;
+      var aport, i, name, _i, _len, _results;
       for (_i = 0, _len = portlist.length; _i < _len; _i++) {
         aport = portlist[_i];
         name = aport["portNumber"];
@@ -62,12 +62,13 @@
       }
       this.speed = 0;
       i = 0;
+      _results = [];
       for (port in this.ports) {
         this.speed += this.ports[port].speed;
         speed[i] = this.ports[port].speed;
-        i++;
+        _results.push(i++);
       }
-      return console.log(this.speed);
+      return _results;
     };
 
     return machine;

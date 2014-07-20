@@ -13,38 +13,41 @@ cb = (res)->
 	res.on 'end', (chunk)->
 		proc str
 cluster={}
+class port
+	constructor : (@name)->
+		@speed=0
+		@last={}
+	update:(aport)->
+		@speed = aport['transmitBytes']+aport['receiveBytes']-@last['transmitBytes']-@last['receiveBytes']
+		@last=aport
+
 class machine
 	constructor: (@name) ->
 		@ports={}
-	procpermachine: (portlist)->
-
+		@speed=0
+	update: (portlist)->
 		for aport in portlist
-			port_num = aport["portNumber"]
-			if @ports[port_num] isnt undefined
-				port=@ports[port_num]
-				port.speed = aport['transmitBytes']+aport['receiveBytes']-port.last['transmitBytes']-port.last['receiveBytes']
-
+			name=aport["portNumber"]
+			if @ports[name] is undefined
+				@ports[name]=new port name
+				@ports[name].last=aport
 			else
-				@ports[port_num] = {}
-				@ports[port_num].speed = 0
-			
-			@ports[port_num].last = aport
-			@ports[port_num].last.time = 0
-		speed=0
+				@ports[name].update(aport)
+		@speed=0
 		for port of @ports
-			speed +=@ports[port].speed
-
-		machine.speed=speed
-		console.log speed
+			@speed +=@ports[port].speed
+		console.log @speed
 
 proc =(str)->
 	json=eval("("+str+")")
 	for name of json
-		procpermachine name,json[name]
+		if cluster[name] is undefined
+			cluster[name]=new machine name
+		cluster[name].update json[name]
 	
 
 run= ->
 	a=http.request opt,cb
 	a.end()
-	console.log "Tick"
+
 setInterval run,1000

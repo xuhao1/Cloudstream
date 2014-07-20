@@ -10,6 +10,11 @@ init_connect = (data)->
 	socket = io.connect document.domain
 	socket.on 'connect',()->
 		mkchart("#container",update)
+		mkchart("#container1",update)
+		mkchart("#container2",update)
+		mkchart("#container3",update)
+		mkchart("#container4",update)
+		mkchart("#container5",update)
 		console.log("Connected")
 	socket.on "disconnect",()->
 		console.log("disConnect")

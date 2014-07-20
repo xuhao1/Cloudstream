@@ -18,6 +18,11 @@
     socket = io.connect(document.domain);
     socket.on('connect', function() {
       mkchart("#container", update);
+      mkchart("#container1", update);
+      mkchart("#container2", update);
+      mkchart("#container3", update);
+      mkchart("#container4", update);
+      mkchart("#container5", update);
       return console.log("Connected");
     });
     socket.on("disconnect", function() {

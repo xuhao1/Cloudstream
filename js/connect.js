@@ -51,7 +51,7 @@
       if (("type" in json) && (json["type"] === "setup")) {
         for (name in json["machines"]) {
           console.log(name);
-          $("#main").append("<div id='" + name + "' class ='row machine'></div>");
+          $("#main").append("<div id='" + name + "' class ='col-md-6 machine'></div>");
           mkchart("#" + name, update, json["machines"][name]);
         }
       }

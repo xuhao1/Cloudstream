@@ -35,7 +35,7 @@ init_connect = (data)->
 		if ("type" of json) and (json["type"] is "setup")
 			for name of json["machines"]
 				console.log name
-				$("#main").append "<div id='#{ name }' class ='row machine'></div>"
+				$("#main").append "<div id='#{ name }' class ='col-md-6 machine'></div>"
 				mkchart "#"+name,update,json["machines"][name]
 		if ("type" of json) and (json["type"] is "log")
 				$("#log").append json["msg"]

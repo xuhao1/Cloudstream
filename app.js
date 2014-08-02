@@ -20,11 +20,36 @@
     return res.sendfile(__dirname + req.path);
   });
 
-  run = (require('./getStream')).update;
+  run = (require('./getStream2')).update;
 
   io.sockets.on('connection', function(socket) {
+    var log, opt;
     console.log("Connected");
-    return setInterval(run, 1000, socket);
+    log = function() {
+      ({
+        jsonmes: {
+          type: "log",
+          msg: "MissU\n"
+        }
+      });
+      return socket.send(JSON.stringify(jsonmes));
+    };
+    opt = {
+      type: "setup",
+      machines: {
+        m0: {
+          num: 2,
+          name: "Yang"
+        },
+        m1: {
+          num: 2,
+          name: "Qixin"
+        }
+      }
+    };
+    socket.send(JSON.stringify(opt));
+    setInterval(run, 1000, socket);
+    return setInterval(log, 30, socket);
   });
 
   server.listen(8080);

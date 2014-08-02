@@ -1,4 +1,39 @@
-function mkchart(name,update) {
+function mkserie(name)
+{
+	return {
+		name: name,
+		data: (function() {
+			// generate an array of random data
+			var data = [],
+		time = (new Date()).getTime(),
+		i;
+
+		for (i = -19; i <= 0; i++) {
+			data.push({
+				x: time + i * 1000,
+				y: 0
+			});
+		}
+		return data;
+		})()
+	};
+}
+function mkseries(json)
+{
+	var num=json["num"];
+	var a=[];
+	for (var i=0;i<2*num;i++)
+	{
+		if (i<num)
+			name="Queue0 VM"+i;
+		else
+			name="Queue1 VM"+(2*num-1-i);
+		a[i]=mkserie(name);
+	}
+
+	return a;
+}
+function mkchart(name,update,json) {
 	Highcharts.setOptions({
 		global: {
 			useUTC: false
@@ -8,7 +43,7 @@ function mkchart(name,update) {
 	var chart;
 	$(name).highcharts({
 		chart: {
-			type: 'spline',
+			type: 'areaspline',
 		animation: Highcharts.svg, // don't animate in old IE
 		marginRight: 10,
 		events: {
@@ -16,17 +51,15 @@ function mkchart(name,update) {
 
 				// set up the updating of the chart each second
 				var series = this.series;
-				   setInterval(function() {
-					time = (new Date()).getTime(),
-					y = Math.random();
-				//series.addPoint([x, y], true, true);
-				update(series,time)
-				}, 1000);
+				setInterval(function() {
+					time = (new Date()).getTime();
+					update(json["name"],series,time)
+				}, 5000);
 			}
 		}
 		},
 			title: {
-				text: 'Live Speed'
+				text: json["name"]
 			},
 			xAxis: {
 				type: 'datetime',
@@ -34,13 +67,16 @@ function mkchart(name,update) {
 			},
 			yAxis: {
 				title: {
-					text: 'Speed'
+					text: 'Speed Percent'
 				},
 				plotLines: [{
 					value: 0,
 					width: 1,
 					color: '#808080'
 				}]
+				//,
+				//max:100,
+				//min:-100
 			},
 			tooltip: {
 				formatter: function() {
@@ -49,62 +85,23 @@ function mkchart(name,update) {
 						Highcharts.numberFormat(this.y, 2);
 				}
 			},
+			plotOptions: {
+				areaspline: {
+					//stacking: 'percent',
+					lineColor: '#ffffff',
+					lineWidth: 1,
+					marker: {
+						lineWidth: 1,
+						lineColor: '#ffffff'
+					}
+				}
+			},
 			legend: {
-				enabled: false
+				enabled: true
 			},
 			exporting: {
 				enabled: false
 			},
-			series: [{
-				name: '01Speed',
-				data: (function() {
-					// generate an array of random data
-					var data = [],
-				time = (new Date()).getTime(),
-				i;
-
-				for (i = -19; i <= 0; i++) {
-					data.push({
-						x: time + i * 1000,
-						y: 0
-					});
-				}
-				return data;
-				})()
-			},
-			{
-				name: '02Speed',
-				data: (function() {
-					// generate an array of random data
-					var data = [],
-				time = (new Date()).getTime(),
-				i;
-
-				for (i = -19; i <= 0; i++) {
-					data.push({
-						x: time + i * 1000,
-						y: 0
-					});
-				}
-				return data;
-				})()
-			},
-			{
-				name: '03Speed',
-				data: (function() {
-					// generate an array of random data
-					var data = [],
-				time = (new Date()).getTime(),
-				i;
-
-				for (i = -19; i <= 0; i++) {
-					data.push({
-						x: time + i * 1000,
-						y: 0
-					});
-				}
-				return data;
-				})()
-			}]
+			series: mkseries(json)
 	});
 }

@@ -37,7 +37,7 @@ init_connect = (data)->
 				console.log name
 				$("#main").append "<div id='#{ name }' class ='col-md-6 machine'></div>"
 				mkchart "#"+name,update,json["machines"][name]
-		if ("type" of json) and (json["type"] is "log")
+		else if ("type" of json) and (json["type"] is "log")
 				$("#log").append json["msg"]
 		else
 			speed=json['speed']

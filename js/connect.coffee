@@ -42,5 +42,3 @@ init_connect = (data)->
 		else
 			speed=json['speed']
 init_connect()
-
-

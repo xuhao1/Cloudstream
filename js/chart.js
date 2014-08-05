@@ -18,9 +18,8 @@ function mkserie(name)
 		})()
 	};
 }
-function mkseries(json)
+function mkseries(num)
 {
-	var num=json["num"];
 	var a=[];
 	for (var i=0;i<2*num;i++)
 	{
@@ -33,7 +32,7 @@ function mkseries(json)
 
 	return a;
 }
-function mkchart(name,update,json) {
+function mkchart(id,name,num) {
 	Highcharts.setOptions({
 		global: {
 			useUTC: false
@@ -41,7 +40,7 @@ function mkchart(name,update,json) {
 	});
 
 	var chart;
-	$(name).highcharts({
+	$(id).highcharts({
 		chart: {
 			type: 'areaspline',
 		animation: Highcharts.svg, // don't animate in old IE
@@ -51,15 +50,17 @@ function mkchart(name,update,json) {
 
 				// set up the updating of the chart each second
 				var series = this.series;
+				/*
 				setInterval(function() {
 					time = (new Date()).getTime();
 					update(json["name"],series,time)
 				}, 5000);
+				*/
 			}
 		}
 		},
 			title: {
-				text: json["name"]
+				text: name
 			},
 			xAxis: {
 				type: 'datetime',
@@ -102,6 +103,7 @@ function mkchart(name,update,json) {
 			exporting: {
 				enabled: false
 			},
-			series: mkseries(json)
+			series: mkseries(num)
 	});
+	return this.series;
 }

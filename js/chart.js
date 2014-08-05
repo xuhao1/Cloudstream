@@ -54,7 +54,7 @@ function mkchart(name,update,json) {
 				setInterval(function() {
 					time = (new Date()).getTime();
 					update(json["name"],series,time)
-				}, 5000);
+				}, 1000);
 			}
 		}
 		},

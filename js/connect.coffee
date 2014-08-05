@@ -1,9 +1,11 @@
 speed={}
+gspeed={}
 vmindex={}
 vmnumbe=0
 update = (name,dataset,x)->
 	#x=(new Date() ).getTime()
-	mspeed=speed[name]
+	mspeed=gspeed[name]
+	console.log JSON.stringify gspeed
 	console.log mspeed
 	q0=mspeed["Queue0"]
 	q1=mspeed["Queue1"]
@@ -22,31 +24,8 @@ update = (name,dataset,x)->
 		count1+= q1[vm]
 		dataset[2*num-vm-1].addPoint [x,-count1 ],true,true
 
-
-init_connect = (data)->
-	socket = io.connect document.domain
-	socket.on 'connect',()->
-		console.log("Connected")
-	socket.on "disconnect",()->
-		console.log("disConnect")
-	socket.on "message",(mes)->
-		json=eval '('+mes+')'
-		console.log(mes)
-		if ("type" of json) and (json["type"] is "setup")
-			for name of json["machines"]
-				console.log name
-				$("#main").append "<div id='#{ name }' class ='col-md-6 machine'></div>"
-				mkchart "#"+name,update,json["machines"][name]
-		else if ("type" of json) and (json["type"] is "log")
-				$("#log").append json["msg"]
-		else
-			speed=json['speed']
-init_connect()
-
-
 send_json=(mes)->
 	json=eval '('+mes+')'
-	console.log(mes)
 	if ("type" of json) and (json["type"] is "setup")
 		for name of json["machines"]
 			console.log name
@@ -55,4 +34,46 @@ send_json=(mes)->
 	else if ("type" of json) and (json["type"] is "log")
 			$("#log").append json["msg"]
 	else
-		speed=json['speed']
+		gspeed=json['speed']
+
+#Below is example to use it
+opt=
+	type:"setup"
+	machines:
+		m0:
+			num:2
+			name:"Qiao"
+		m1:
+			num:2
+			name:"Chu"
+
+send_json JSON.stringify opt
+
+speed={}
+addMachine=(name)->
+	speed[name]={}
+	speed[name]["Queue0"]=[]
+	speed[name]["Queue1"]=[]
+	for a of speed[name]
+		q=speed[name][a]
+		q[0]=0
+		q[1]=0
+
+addMachine "Qiao"
+addMachine "Chu"
+
+mkrandom=(name)->
+	for a of speed[name]
+		q=speed[name][a]
+		q[0]=Math.random()*100
+		q[1]=Math.random()*100
+
+
+run=->
+	for a of speed
+		mkrandom(a)
+	data={'speed':speed}
+	send_json JSON.stringify data
+
+setInterval run,1000
+

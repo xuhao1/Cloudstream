@@ -44,3 +44,15 @@ init_connect = (data)->
 init_connect()
 
 
+send_json=(mes)->
+	json=eval '('+mes+')'
+	console.log(mes)
+	if ("type" of json) and (json["type"] is "setup")
+		for name of json["machines"]
+			console.log name
+			$("#main").append "<div id='#{ name }' class ='col-md-6 machine'></div>"
+			mkchart "#"+name,update,json["machines"][name]
+	else if ("type" of json) and (json["type"] is "log")
+			$("#log").append json["msg"]
+	else
+		speed=json['speed']
